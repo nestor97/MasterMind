@@ -9,32 +9,24 @@ var casillaNum = 55;
 var casillaEva = 75;
 var radioGris = 10;
 var radioColor = 15;
+var filas = new Array();
+var numFilas=10;
+var m;
+for(m=0; m<numFilas; m++){
+    filas[m] = new Array();
+}
+console.log("numFilas: "+filas.length);
 
-/*
-var cartaMargen = 30;
-var cartaLon = 30;
-var cartaAncho = cartaLon * 4;
-var cartaLargo = cartaLon * 4;
-var cartas_array = new Array();**/
 
 /*Colores */
 var coloresCuerpo_array = ["#efd5c6", "#ff9899", "#fde681", "#59f975", "#72e1ff", "#a0e5d2", "#e1ccf7", "#cedec1", "#c3d2d9", "#a3b8ed", "#8d1b1b"];
 var coloresNumFila_array = ["","#ff9698","#fee580","#66ff66","#7fe5fe","#bae9c7","#ffccf4","#eae3b6", "#dfd5d4", "#b5b9e9", ""];
 var coloresEvaFila_array = ["","#fe9695","#fed980","#78f06a","#93d7ea","#c0dec4","#ffc3e7","#eed6b2", "#e2caca", "#c1b0dd", ""];
-var coloresBolas_array = ["blue", "red", "BlueViolet", "orange", "aquamarine", "yellow", "skyblue"];
 var coloresBolas_array = ["rgb(0,0,255)", "rgb(255,0,0)", "rgb(138, 43, 226)", "rgb(255,165,0)", "rgb(127, 255, 212)", "rgb(255,255,0)", "rgb(135, 206, 235)"];
 var bolaGris = "rgb(220, 220, 220)";
 
 var numero = coloresCuerpo_array.length -1;
 
-function Bola(x, y, ancho, largo, color){
-	this.x = x;
-	this.y = y;
-	this.ancho = ancho;
-	this.largo = largo;
-	this.color = color;  // el valor de la carta
-	this.dibuja = dibujaCarta;	
-}
 
 function dibujaFila(x, y, ancho, largo, i){
     //console.log("dibujaFila"+ x+"-"+y+"-"+ ancho+"-"+ largo+"-"+ i);
@@ -50,7 +42,8 @@ function dibujaFila(x, y, ancho, largo, i){
             ctx.fillText("MASTERMIND",x,y);
         }
         if(i==0){
-           dibujaCirculos(x,y, 7); 
+           //dibujaCirculos(x,y, 7,i); 
+           guardaCirculos(x,y, 7,i);
         }
     }
     
@@ -73,7 +66,8 @@ function dibujaFila(x, y, ancho, largo, i){
         //dibujamos el cuerpo central
         ctx.fillStyle = coloresCuerpo_array[i];
         ctx.fillRect(x+casillaNum, y, ancho, largo);
-        dibujaCirculos(x+casillaNum,y, 5);
+        //dibujaCirculos(x+casillaNum,y, 5, i);
+        guardaCirculos(x+casillaNum,y, 5, i);
         
         //Dibujamos la casilla con los datos de verificacion
         ctx.fillStyle = coloresEvaFila_array[i];
@@ -83,15 +77,25 @@ function dibujaFila(x, y, ancho, largo, i){
 
 }
 
-function dibujaCirculos(x,y, n){
+
+
+function guardaCirculos(x,y, n, i){
     var j;
     var r;
+
+    x += 20;
+    y += filaAlto/2;
     
     ctx.beginPath();
     for(j=0; j<n; j++){
         if(n==5){
-            ctx.fillStyle = bolaGris;
-            r=radioGris;
+            filas[i].push(
+                {
+                  x: x,
+                  y: y,
+                  radius: radioGris,
+                  color: bolaGris
+                });
         }else{
             console.log(coloresBolas_array[j]);
             ctx.fillStyle = coloresBolas_array[j];
@@ -101,14 +105,50 @@ function dibujaCirculos(x,y, n){
             }else{
                 x+=5;
             }
+
+            filas[i].push(
+                {
+                  x: x,
+                  y: y,
+                  radius: radioColor,
+                  color: coloresBolas_array[j]
+                });
             
         }
-        ctx.beginPath(); 
-        ctx.arc(x+20, y+(filaAlto/2), r, 0, 2 * Math.PI);
-        ctx.fill();            
+                
            x += 40;
     }
 }
+
+/****************** */
+
+function dibujar(circles){
+    circles.forEach(circle => {
+        ctx.beginPath();
+        ctx.arc(circle.x, circle.y, circle.radius, 0, 2 * Math.PI, false);
+        ctx.fillStyle = circle.color;
+        ctx.fill();
+      });
+    
+}
+
+function dibuix(circle, index){
+    console.log(index);
+    console.log(circle);
+}
+
+function dibuixaFileres(){
+    var i;
+    for(i=0; i<filas.length; i++){
+        dibujar(filas[i]);
+    }
+}
+
+
+
+
+/****************** */
+
 
 function tablero(){
     console.log("tablero");
@@ -127,8 +167,12 @@ function tablero(){
         
         //Aumentamos valor de y
         y += filaAlto;
-	}
+    }
+    
+    dibuixaFileres();
 }
+
+
 
 
 
@@ -160,19 +204,52 @@ function init(){
     ALTURA = $('#miCanvas').height();
     console.log(AMPLE+"---"+ALTURA);
     console.log("fila-->"+ALTURA/12);
-    //dibuixa();
     
-    canvas.addEventListener('click', (e) => {
-        const mousePos = {
-            x: e.clientX - canvas.offsetLeft,
-            y: e.clientY - canvas.offsetTop
-           
-        };
-        console.log($(Object).css('background-color'));
+
+ /**OBTENER INFORMACION DE LOS CIRCULOS */
+
+ /*** Se calcula posicion de los circulos y se hace click */
+ function isIntersect(point, circle) {
+    return Math.sqrt((point.x-circle.x) ** 2 + (point.y - circle.y) ** 2) < circle.radius;
+  }
+
+
+canvas.addEventListener('click', (e) => {
+    const pos = {
+      x: e.clientX-canvas.offsetLeft,
+      y: e.clientY-canvas.offsetTop
+    };
+
+    console.log("posicion----> x:"+pos.x+ ' y: '+pos.y);
+
+    var i;
+    for(i=0; i<filas.length; i++){
+        filas[i].forEach(circle => {
+            if (isIntersect(pos, circle)) {
+                
+              alert('click on circle: ' + 'x: '+circle.x+' y: '+circle.y+' color:'+circle.color+' radius:'+circle.radius+' id:'+circle.id+' fila:'+i );
+             // dibujaCirculo(circle);
+            }
+            //console.log(isIntersect(pos, circle));
+          });
+    }
+    
+  });
+ 
+  /*
+  var cont=1;
+  for(i=0; i<filas.length; i++){
+    filas[i].forEach(circle => {        
+            console.log("fila: "+i+", circulo: "+cont+", color: "+circle.color);
+            cont++;        
     });
 
+    console.log('canvas click');
+   }**/
+
+  /************** */
     
-    
+    console.log(filas);
 
 
     
@@ -187,3 +264,6 @@ function dibuixa(){
 }
 
 init();
+
+
+

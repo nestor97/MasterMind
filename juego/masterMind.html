@@ -19,24 +19,32 @@
 			header.cesar{font-size:40px; color: white;text-shadow:2px 2px 5px blue; }
 			h4{margin-top: -30px;}
 			header{color: red;margin-bottom:40px;}
-			canvas{ margin: 10px auto; border:5px groove red; /*background-color: whitesmoke;*/}
+			canvas{ margin: 10px auto; border:5px groove red; background-color: whitesmoke;}
+			div{width: 360px; margin: 0 auto; justify-content:space-between;}
+			#newparty{float: left;}
+			#test{float: right;}
 		</style>
 	</head>
 	<body>
 		<section>
-			<header class="cesar">MASTERMIND02</header>
+			<header class="cesar">MASTERMIND</header>
 			<h4>Estruja tu mente</h4>
 
 			<!-- El llenç amb l'element canvas de 300x500 píxels-->
-			<canvas id="miCanvas" width="350" height="500">
+			<canvas id="miCanvas" width="350" height="425">
 				El teu navegador NO és compatible amb l'element Canvas d'HTML5
 			</canvas>
+			<div class="botones">
+				<button type="button" id="newparty">Nova Partida</button>
+				<button type="button" id="eraser">Esborra</button>
+				<button type="button" id="test">Comprova-ho</button>
+			</div>
 
 		</section>
 		<footer class="englebert"><h5>Departament Informàtica - INS. La Pineda-2020</h5></footer>
         
     <!-- El codi del joc Mastermind -->
-    <script src="js/mastermind02.js"></script>
+    <script src="js/mastermind.js"></script>
     
 	</body>
 </html>

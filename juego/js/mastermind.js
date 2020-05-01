@@ -287,6 +287,8 @@ canvas.addEventListener('click', (e) => {
             //console.log(isIntersect(pos, circle));
           });
     }
+
+    console.log("offsetLeft-->"+canvas.offsetLeft);
     
   });
  
@@ -323,3 +325,67 @@ init();
 
 
 
+/*
+function animacion(){
+    var img = new Image();
+    img.src = '../mastermind01/img/mastermindganar.png';
+    img.onload = function(){
+        
+            ctx.drawImage(img, 10, 10);
+            
+        
+        
+    }
+}*/
+
+var filera=0;
+var ganar=false;
+var play =false;
+
+
+$("#test").click(function() {
+    filera++;
+    
+    if(filera==9 && ganar==false && play==false){
+        play=true;
+        perder();
+    }else if(ganar== true && play==false){
+        play=true;
+        guanyar();
+    }
+    console.log("test"+filera);
+    
+  });
+
+function guanyar(){
+    
+    var img = new Image();
+    img.src = '../juego/img/mastermindganar.png';
+    img.onload = function(){
+    ctx.fillStyle = 'rgba(255,255,255, .4)';
+    ctx.fillRect(0, 150, 350, 306);
+    ctx.drawImage(img, 55, 200, 240, 160); 
+   
+          
+        
+    }
+
+    var audio = new Audio('../juego/audio/fanfarrias.mp3');
+    audio.play();
+
+}
+
+function perder(){
+    
+    var img = new Image();
+    img.src = '../juego/img/mastermindperder.png';
+    img.onload = function(){     
+        ctx.fillStyle = 'rgba(0,0,0, .4)';
+        ctx.fillRect(0, 150, 350, 306);  
+        ctx.drawImage(img, 55, 200, 240, 160); 
+    }
+
+    var audio = new Audio('../juego/audio/funebre.mp3');
+    audio.play();
+
+}

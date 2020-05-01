@@ -7,15 +7,21 @@ var filaAncho = 200;
 var filaAlto = 35;
 var casillaNum = 55;
 var casillaEva = 75;
+var radioGrisPequeño = 5;
 var radioGris = 10;
 var radioColor = 15;
-var filas = new Array();
+var filas = new Array(); //Bolas del panel
+var filas2 = new Array(); //Bolas de los aciertos
 var numFilas=10;
 var m;
 for(m=0; m<numFilas; m++){
     filas[m] = new Array();
+    if(m>0){
+        filas2[m] = new Array();
+    }
 }
 console.log("numFilas: "+filas.length);
+console.log("numFilas2: "+filas2.length);
 
 
 /*Colores */
@@ -72,6 +78,7 @@ function dibujaFila(x, y, ancho, largo, i){
         //Dibujamos la casilla con los datos de verificacion
         ctx.fillStyle = coloresEvaFila_array[i];
         ctx.fillRect(x+casillaNum+ancho, y, casillaEva, largo);
+        guardaCirculosAciertos(x+casillaNum+ancho, y, 5, i);
     }
     
 
@@ -120,27 +127,74 @@ function guardaCirculos(x,y, n, i){
     }
 }
 
+function guardaCirculosAciertos(x,y, n, i){
+    var j;
+    var r;
+    var dx = x+casillaEva/6;
+    var dy = y+filaAlto/4;
+
+
+    ctx.beginPath();
+    for(j=0; j<n; j++){
+        console.log("fila: "+i+" columna: "+j+" dx: "+dx+" dy: "+dy);
+        if(j<3){
+            filas2[i].push(
+                {
+                  x: dx,
+                  y: dy,
+                  radius: radioGrisPequeño,
+                  color: bolaGris
+                });
+            
+            dx += casillaEva/3;
+            if(j==2){
+               dy += filaAlto/2; 
+            }
+             
+        }else{
+            if(j==3){
+                dx = x+casillaEva/3;
+            }else{
+                dx += casillaEva/3;
+            }            
+            filas2[i].push(
+                {
+                  x: dx,
+                  y: dy,
+                  radius: radioGrisPequeño,
+                  color: bolaGris
+                });
+            
+        }
+    }
+
+}
+
 /****************** */
 
-function dibujar(circles){
+function dibujarCircles(circles){
     circles.forEach(circle => {
         ctx.beginPath();
         ctx.arc(circle.x, circle.y, circle.radius, 0, 2 * Math.PI, false);
         ctx.fillStyle = circle.color;
         ctx.fill();
-      });
-    
+      });    
 }
+
 
 function dibuix(circle, index){
     console.log(index);
     console.log(circle);
 }
 
-function dibuixaFileres(){
+function dibuixaFileres(f, ff){
     var i;
-    for(i=0; i<filas.length; i++){
-        dibujar(filas[i]);
+    for(i=0; i<f.length; i++){
+        dibujarCircles(f[i]);
+        if(i>0){
+            dibujarCircles(ff[i]);
+        }
+        
     }
 }
 
@@ -169,7 +223,7 @@ function tablero(){
         y += filaAlto;
     }
     
-    dibuixaFileres();
+    dibuixaFileres(filas, filas2);
 }
 
 
@@ -248,8 +302,10 @@ canvas.addEventListener('click', (e) => {
    }**/
 
   /************** */
-    
+    console.log("filas");
     console.log(filas);
+    console.log("filas2");
+    console.log(filas2);
 
 
     

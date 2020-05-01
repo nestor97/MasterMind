@@ -14,6 +14,10 @@ var filas = new Array(); //Bolas del panel
 var filas2 = new Array(); //Bolas de los aciertos
 var numFilas = 10;
 var m;
+let posicionSelecionada;
+let posicionSelecionadaIndex;
+var bolasElegidas = new Array(); // bolas aleatorias para ganar
+
 for (m = 0; m < numFilas; m++) {
     filas[m] = new Array();
     if (m > 0) {
@@ -168,12 +172,16 @@ function guardaCirculosAciertos(x, y, n, i) {
 
 /****************** */
 
+function dibujarCircle(circle) {
+    ctx.beginPath();
+    ctx.arc(circle.x, circle.y, circle.radius, 0, 2 * Math.PI, false);
+    ctx.fillStyle = circle.color;
+    ctx.fill();
+}
+
 function dibujarCircles(circles) {
     circles.forEach(circle => {
-        ctx.beginPath();
-        ctx.arc(circle.x, circle.y, circle.radius, 0, 2 * Math.PI, false);
-        ctx.fillStyle = circle.color;
-        ctx.fill();
+        dibujarCircle(circle);
     });
 }
 
@@ -220,6 +228,8 @@ function tablero() {
     }
 
     dibuixaFileres(filas, filas2);
+    // console.log("circulo para crear circulo");
+    // console.log(filas2);
 }
 
 
@@ -271,18 +281,49 @@ function init() {
         };
 
         console.log("posicion----> x:" + pos.x + ' y: ' + pos.y);
-
+        // console.log("=======filas==========");
+        // console.log(filas);
+        // console.log("=======filas==========");
         var i;
-        for (i = 0; i < filas.length; i++) {
-            filas[i].forEach(circle => {
-                if (isIntersect(pos, circle)) {
 
-                    alert('click on circle: ' + 'x: ' + circle.x + ' y: ' + circle.y + ' color:' + circle.color + ' radius:' + circle.radius + ' id:' + circle.id + ' fila:' + i);
+        for (i = 0; i < filas.length; i++) {
+            filas[i].forEach(function(circle, index) {
+                if (isIntersect(pos, circle)) {
+                    if (i == 0) {
+                        console.log("Eligiendo color");
+                        // console.log(circle);
+                        if (typeof posicionSelecionada !== 'undefined') {
+                            posicionSelecionada.color = circle.color;
+                            dibujarCircle(posicionSelecionada);
+                            filas[filera + 1][posicionSelecionadaIndex] = posicionSelecionada;
+                            console.log("filas 2");
+                            console.log(filas2);
+                        }
+                        // console.log(posicionSelecionada);
+                        // posicion = null;
+                    } else if (i == (filera + 1)) {
+                        console.log("Eligiendo posicion");
+                        posicionSelecionada = circle;
+                        console.log(filas[filera + 1][index]);
+                        posicionSelecionadaIndex = index;
+                        // console.log(pos);
+                        // console.log(index);
+                        console.log("FIN Eligiendo posicion");
+
+                    }
+                    // console.log(filas);
+                    // console.log(filas2);
+                    // console.log("pos");
+                    // console.log(pos);
+                    // console.log("circle");
+                    // console.log(circle);
+                    //alert('click on circle: ' + 'x: ' + circle.x + ' y: ' + circle.y + ' color:' + circle.color + ' radius:' + circle.radius + ' id:' + circle.id + ' fila:' + i);
                     // dibujaCirculo(circle);
                 }
                 //console.log(isIntersect(pos, circle));
             });
         }
+
 
         // console.log("offsetLeft-->"+canvas.offsetLeft);
 
@@ -349,7 +390,8 @@ $("#test").click(function() {
         play = true;
         guanyar();
     }
-    console.log("test" + filera);
+    console.log("Fila " + filera);
+    posicionSelecionada = undefined;
 
 });
 

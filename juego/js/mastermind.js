@@ -33,7 +33,7 @@ var coloresCuerpo_array = ["#efd5c6", "#ff9899", "#fde681", "#59f975", "#72e1ff"
 var coloresNumFila_array = ["", "#ff9698", "#fee580", "#66ff66", "#7fe5fe", "#bae9c7", "#ffccf4", "#eae3b6", "#dfd5d4", "#b5b9e9", ""];
 var coloresEvaFila_array = ["", "#fe9695", "#fed980", "#78f06a", "#93d7ea", "#c0dec4", "#ffc3e7", "#eed6b2", "#e2caca", "#c1b0dd", ""];
 var coloresBolas_array = ["rgb(0,0,255)", "rgb(255,0,0)", "rgb(138, 43, 226)", "rgb(255,165,0)", "rgb(127, 255, 212)", "rgb(255,255,0)", "rgb(135, 206, 235)"];
-var bolaGris = "rgb(220, 220, 220)";
+var bolaGris = "rgb(200, 200, 200)";
 
 var numero = coloresCuerpo_array.length - 1;
 
@@ -228,6 +228,7 @@ function tablero() {
     }
 
     dibuixaFileres(filas, filas2);
+    calculaBolasEscogidas();
     // console.log("circulo para crear circulo");
     // console.log(filas2);
 }
@@ -276,8 +277,8 @@ function init() {
 
     canvas.addEventListener('click', (e) => {
         const pos = {
-            x: e.clientX - canvas.offsetLeft,
-            y: e.clientY - canvas.offsetTop
+            x: e.clientX - canvas.offsetLeft - 5,
+            y: e.clientY - canvas.offsetTop - 5
         };
 
         console.log("posicion----> x:" + pos.x + ' y: ' + pos.y);
@@ -382,6 +383,10 @@ var play = false;
 
 $("#test").click(function() {
     filera++;
+    let aciertosColoresFila = 0;
+    let aciertosColoresYPosicionFila = 0;
+    let aciertosTotal = 0;
+    let bolas_index = new Array();
 
     if (filera == 9 && ganar == false && play == false) {
         play = true;
@@ -389,9 +394,65 @@ $("#test").click(function() {
     } else if (ganar == true && play == false) {
         play = true;
         guanyar();
+    } else {
+        console.log("=====COMRPOBAR COLORES=====");
+
+        for (let index = 0; index < filas[filera].length; index++) {
+            let indexof = bolasElegidas.indexOf(filas[filera][index].color);
+            console.log("INIT BOLA ITEM");
+
+
+            bolasElegidas.filter(function(bola, index) {
+                let bola_index = bola.indexOf(filas[filera][index].color);
+                if (bola_index !== -1) {
+                    console.log("index");
+                    console.log(index);
+                    bolas_index.push(index);
+                }
+
+
+            });
+            console.log(bolas_index);
+            console.log("FIN BOLA ITEM");
+
+
+            if (indexof >= 0 && indexof == index) {
+                console.log("color y posicion : " + index);
+                aciertosColoresYPosicionFila++;
+            } else if (indexof >= 0) {
+                console.log("SOLO color" + index);
+                aciertosColoresFila++;
+
+            } else {
+                console.log("nada");
+
+            }
+        }
+        console.log("aciertosColoresFila " + aciertosColoresFila);
+        console.log("aciertosColoresYPosicionFila " + aciertosColoresYPosicionFila);
+        aciertosTotal = aciertosColoresFila + aciertosColoresYPosicionFila
+        for (let index = 0; index < aciertosTotal; index++) {
+            console.log("idenx: " + index);
+            let ciruloSelecionado = null;
+            if (aciertosColoresYPosicionFila > 0) {
+                console.log("DENTRO aciertosColoresYPosicionFila");
+
+                filas2[filera][index].color = "rgb(0,0,0)";
+                ciruloSelecionado = filas2[filera][index];
+                aciertosColoresYPosicionFila--;
+            } else if (aciertosColoresFila > 0) {
+                console.log("DENTRO aciertosColoresFila");
+
+                filas2[filera][index].color = "rgb(255,255,255)";
+                ciruloSelecionado = filas2[filera][index];
+                aciertosColoresFila--;
+            }
+            dibujarCircle(ciruloSelecionado);
+        }
+        posicionSelecionada = undefined;
+
     }
     console.log("Fila " + filera);
-    posicionSelecionada = undefined;
 
 });
 
@@ -426,4 +487,18 @@ function perder() {
     var audio = new Audio('../juego/audio/funebre.mp3');
     audio.play();
 
+}
+
+function calculaBolasEscogidas() {
+    for (let index = 0; index < 5; index++) {
+        let colorAlearotio = calcularNumeroAletorio(coloresBolas_array.length - 1, 0);
+        bolasElegidas.push(coloresBolas_array[colorAlearotio]);
+    }
+    console.log(bolasElegidas);
+}
+
+
+// Funcion para obtener numero aleatorio con un min y max
+function calcularNumeroAletorio(max, min) {
+    return Math.floor((Math.random() * max) + min);
 }

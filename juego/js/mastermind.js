@@ -18,12 +18,19 @@ let posicionSelecionada;
 let posicionSelecionadaIndex;
 var bolasElegidas = new Array(); // bolas aleatorias para ganar
 
-for (m = 0; m < numFilas; m++) {
-    filas[m] = new Array();
-    if (m > 0) {
-        filas2[m] = new Array();
+crearArrayVacio();
+
+function crearArrayVacio() {
+    filas = new Array(); //Bolas del panel
+    filas2 = new Array(); //Bolas de los aciertos
+    for (m = 0; m < numFilas; m++) {
+        filas[m] = new Array();
+        if (m > 0) {
+            filas2[m] = new Array();
+        }
     }
 }
+
 console.log("numFilas: " + filas.length);
 console.log("numFilas2: " + filas2.length);
 
@@ -208,7 +215,7 @@ function dibuixaFileres(f, ff) {
 /****************** */
 
 
-function tablero() {
+function tablero(reset) {
     console.log("tablero");
     var i;
     var fila;
@@ -228,9 +235,11 @@ function tablero() {
     }
 
     dibuixaFileres(filas, filas2);
-    calculaBolasEscogidas();
-    // console.log("circulo para crear circulo");
-    // console.log(filas2);
+    if (reset == false) {
+        calculaBolasEscogidas();
+    }
+    console.log("bolasElegidas");
+    console.log(bolasElegidas);
 }
 
 
@@ -238,23 +247,17 @@ function tablero() {
 
 
 
-function init() {
+function init(reset) {
     //obtenir una referencia al llenç
     console.log("inicio");
     canvas = document.getElementById("miCanvas");
-
-    /*
-    ctx.fillStyle = colores_array[0];
-    ctx.fillRect(inicioX, inicioY, filaAncho, filaAlto);*/
-
 
     if (canvas && canvas.getContext) {
         console.log("2d");
         ctx = canvas.getContext("2d");
         if (ctx) {
-            //canvas.addEventListener("click",selecciona,false);
             console.log("ctx");
-            tablero();
+            tablero(reset);
         } else {
             alert("Error al crear tu contexto");
         }
@@ -282,9 +285,6 @@ function init() {
         };
 
         console.log("posicion----> x:" + pos.x + ' y: ' + pos.y);
-        // console.log("=======filas==========");
-        // console.log(filas);
-        // console.log("=======filas==========");
         var i;
 
         for (i = 0; i < filas.length; i++) {
@@ -292,7 +292,6 @@ function init() {
                 if (isIntersect(pos, circle)) {
                     if (i == 0) {
                         console.log("Eligiendo color");
-                        // console.log(circle);
                         if (typeof posicionSelecionada !== 'undefined') {
                             posicionSelecionada.color = circle.color;
                             dibujarCircle(posicionSelecionada);
@@ -312,34 +311,10 @@ function init() {
                         console.log("FIN Eligiendo posicion");
 
                     }
-                    // console.log(filas);
-                    // console.log(filas2);
-                    // console.log("pos");
-                    // console.log(pos);
-                    // console.log("circle");
-                    // console.log(circle);
-                    //alert('click on circle: ' + 'x: ' + circle.x + ' y: ' + circle.y + ' color:' + circle.color + ' radius:' + circle.radius + ' id:' + circle.id + ' fila:' + i);
-                    // dibujaCirculo(circle);
                 }
-                //console.log(isIntersect(pos, circle));
             });
         }
-
-
-        // console.log("offsetLeft-->"+canvas.offsetLeft);
-
     });
-
-    /*
-    var cont=1;
-    for(i=0; i<filas.length; i++){
-      filas[i].forEach(circle => {        
-              console.log("fila: "+i+", circulo: "+cont+", color: "+circle.color);
-              cont++;        
-      });
-
-      console.log('canvas click');
-     }**/
 
     /************** */
     console.log("filas");
@@ -359,7 +334,7 @@ function dibuixa() {
 
 }
 
-init();
+init(false);
 
 
 
@@ -506,6 +481,26 @@ $("#test").click(function() {
 
 });
 
+$("#newparty").click(function() {
+    limpiarCanvas();
+    crearArrayVacio();
+    init(false);
+
+});
+
+$("#eraser").click(function() {
+    limpiarCanvas();
+    crearArrayVacio();
+    init(true);
+
+});
+
+
+function limpiarCanvas() {
+    const context = canvas.getContext('2d');
+    context.clearRect(0, 0, canvas.width, canvas.height);
+}
+
 function guanyar() {
 
     var img = new Image();
@@ -540,17 +535,16 @@ function perder() {
 }
 
 function calculaBolasEscogidas() {
-    /*for (let index = 0; index < 5; index++) {
+    bolasElegidas = new Array();
+    for (let index = 0; index < 5; index++) {
         let colorAlearotio = calcularNumeroAletorio(coloresBolas_array.length - 1, 0);
 
         while (bolasElegidas.indexOf(coloresBolas_array[colorAlearotio]) !== -1) {
             colorAlearotio = calcularNumeroAletorio(coloresBolas_array.length - 1, 0);
         }
         bolasElegidas.push(coloresBolas_array[colorAlearotio]);
-    }*/
-    bolasElegidas = ["rgb(0,0,255)", "rgb(255,0,0)", "rgb(138, 43, 226)", "rgb(255,165,0)", "rgb(127, 255, 212)"];
-    console.log("bolasElegidas");
-    console.log(bolasElegidas);
+    }
+    // bolasElegidas = ["rgb(0,0,255)", "rgb(255,0,0)", "rgb(138, 43, 226)", "rgb(255,165,0)", "rgb(127, 255, 212)"];
 }
 
 

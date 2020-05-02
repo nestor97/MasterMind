@@ -20,6 +20,7 @@ var bolasElegidas = new Array(); // bolas aleatorias para ganar
 
 crearArrayVacio();
 
+// Crear los arrays de datos de los circulos de colores y de resultados
 function crearArrayVacio() {
     filas = new Array(); //Bolas del panel
     filas2 = new Array(); //Bolas de los aciertos
@@ -44,7 +45,7 @@ var bolaGris = "rgb(200, 200, 200)";
 
 var numero = coloresCuerpo_array.length - 1;
 
-
+// Funcion para pintar las filas
 function dibujaFila(x, y, ancho, largo, i) {
     //console.log("dibujaFila"+ x+"-"+y+"-"+ ancho+"-"+ largo+"-"+ i);
     if (i == 0 || i == 10) {
@@ -96,6 +97,7 @@ function dibujaFila(x, y, ancho, largo, i) {
 }
 
 
+// Funcion para guardar información de los circulos de colores
 
 function guardaCirculos(x, y, n, i) {
     var j;
@@ -135,7 +137,7 @@ function guardaCirculos(x, y, n, i) {
         x += 40;
     }
 }
-
+// Funcion para guardar información de los circulos de acierto
 function guardaCirculosAciertos(x, y, n, i) {
     var j;
     var r;
@@ -178,14 +180,14 @@ function guardaCirculosAciertos(x, y, n, i) {
 }
 
 /****************** */
-
+// Función para dibujar un circulo
 function dibujarCircle(circle) {
     ctx.beginPath();
     ctx.arc(circle.x, circle.y, circle.radius, 0, 2 * Math.PI, false);
     ctx.fillStyle = circle.color;
     ctx.fill();
 }
-
+// Función para dibujar circulos
 function dibujarCircles(circles) {
     circles.forEach(circle => {
         dibujarCircle(circle);
@@ -193,11 +195,12 @@ function dibujarCircles(circles) {
 }
 
 
-function dibuix(circle, index) {
+/*function dibuix(circle, index) {
     console.log(index);
     console.log(circle);
-}
+}*/
 
+// Función para dibujar las filas
 function dibuixaFileres(f, ff) {
     var i;
     for (i = 0; i < f.length; i++) {
@@ -214,7 +217,7 @@ function dibuixaFileres(f, ff) {
 
 /****************** */
 
-
+// Función de pintar tablero
 function tablero(reset) {
     console.log("tablero");
     var i;
@@ -246,7 +249,7 @@ function tablero(reset) {
 
 
 
-
+// Función principal de inicio
 function init(reset) {
     //obtenir una referencia al llenç
     console.log("inicio");
@@ -277,7 +280,7 @@ function init(reset) {
         return Math.sqrt((point.x - circle.x) ** 2 + (point.y - circle.y) ** 2) < circle.radius;
     }
 
-
+    // Evento para saber la posición del click
     canvas.addEventListener('click', (e) => {
         const pos = {
             x: e.clientX - canvas.offsetLeft - 5,
@@ -328,34 +331,13 @@ function init(reset) {
 
 //FINAL DEL CODI DE LA BIBLIOTECA
 
-function dibuixa() {
-
-
-
-}
-
 init(false);
-
-
-
-/*
-function animacion(){
-    var img = new Image();
-    img.src = '../mastermind01/img/mastermindganar.png';
-    img.onload = function(){
-        
-            ctx.drawImage(img, 10, 10);
-            
-        
-        
-    }
-}*/
 
 var filera = 0;
 var ganar = false;
 var play = false;
 
-
+// Botón de comprobar fila
 $("#test").click(function() {
     filera++;
     let aciertosColoresFila = 0;
@@ -377,58 +359,8 @@ $("#test").click(function() {
         console.log("=====COMPROBAR COLORES=====");
 
         for (let index = 0; index < filas[filera].length; index++) {
-            //let indexof = bolasElegidas.indexOf(filas[filera][index].color);
-            // console.log("=====INIT GET INDEX OF====");
-
-            // let indexof = bolasElegidas.indexOf(filas[filera][index].color);
-            // console.log("INDEX OF Primer : " + indexof);
-
-            // if (indefOfs.indexOf(indexof) !== -1) {
-            //     indexofTest = bolasElegidas.indexOf(filas[filera][index].color, indexof + 1);
-
-            //     // indefOfs[indexof] = -1;
-            //     indexof = indexofTest;
-            //     console.log("INDEX OF REPETIDO -> Nuevo : " + indexof);
-
-            // }
-
-            // indefOfs.push(indexof);
-            // console.log("====indefOfs====");
-            // console.log(indefOfs);
-
-
 
             let indexof = bolasElegidas.indexOf(filas[filera][index].color);
-
-            /*if (indefOfs.indexOf(indexof) !== -1) {
-                indexofTest = bolasElegidas.indexOf(filas[filera][index].color, indexof + 1);
-
-                indefOfs[indexof] = -1;
-                indexof = indexofTest;
-                console.log("INDEX OF REPETIDO -> Nuevo : " + indexof);
-            }
-
-            indefOfs.push(indexof);
-            console.log("====indefOfs====");
-            console.log(indefOfs);
-            console.log("=====END GET INDEX OF====");*/
-
-            console.log("INIT BOLA ITEM");
-
-
-            /*bolasElegidas.filter(function(bola, index) {
-                let bola_index = bola.indexOf(filas[filera][index].color);
-                if (bola_index !== -1) {
-                    console.log("index");
-                    console.log(index);
-                    bolas_index.push(index);
-                }
-
-
-            });
-            console.log(bolas_index);
-            console.log("FIN BOLA ITEM");*/
-
 
             if (indexof >= 0 && indexof == index) {
                 console.log("color y posicion -> index: " + index + " | INDEX OF: " + indexof);
@@ -436,32 +368,26 @@ $("#test").click(function() {
             } else if (indexof >= 0) {
                 console.log("SOLO color -> index: " + index + " | INDEX OF: " + indexof);
                 aciertosColoresFila++;
-
             } else {
                 console.log("NADA -> index: " + index + " | INDEX OF: " + indexof);
-
-
             }
         }
         console.log("aciertosColoresFila " + aciertosColoresFila);
         console.log("aciertosColoresYPosicionFila " + aciertosColoresYPosicionFila);
+
         aciertosTotal = aciertosColoresFila + aciertosColoresYPosicionFila
 
         if (aciertosColoresYPosicionFila == 5) {
             ganar = true;
         }
         for (let index = 0; index < aciertosTotal; index++) {
-            // console.log("idenx: " + index);
             let ciruloSelecionado = null;
             if (aciertosColoresYPosicionFila > 0) {
-                // console.log("DENTRO aciertosColoresYPosicionFila");
-
                 filas2[filera][index].color = "rgb(0,0,0)";
                 ciruloSelecionado = filas2[filera][index];
                 aciertosColoresYPosicionFila--;
-            } else if (aciertosColoresFila > 0) {
-                // console.log("DENTRO aciertosColoresFila");
 
+            } else if (aciertosColoresFila > 0) {
                 filas2[filera][index].color = "rgb(255,255,255)";
                 ciruloSelecionado = filas2[filera][index];
                 aciertosColoresFila--;
@@ -481,13 +407,14 @@ $("#test").click(function() {
 
 });
 
+// Boton de "Nova partida", borra todos los cambios tambien las bolas a adivinar
 $("#newparty").click(function() {
     limpiarCanvas();
     crearArrayVacio();
     init(false);
 
 });
-
+// Boton de "Esborra", borra todos los cambios manteniendo las mismas bolas a adivinar
 $("#eraser").click(function() {
     limpiarCanvas();
     crearArrayVacio();
@@ -495,12 +422,13 @@ $("#eraser").click(function() {
 
 });
 
-
+// Funcion para limpiar el canvas
 function limpiarCanvas() {
     const context = canvas.getContext('2d');
     context.clearRect(0, 0, canvas.width, canvas.height);
 }
 
+// funcion para ganar
 function guanyar() {
 
     var img = new Image();
@@ -519,6 +447,7 @@ function guanyar() {
 
 }
 
+// funcion para perder
 function perder() {
 
     var img = new Image();
@@ -534,6 +463,7 @@ function perder() {
 
 }
 
+// Funcion para Calcular el Resultado de las bolas a adivinar
 function calculaBolasEscogidas() {
     bolasElegidas = new Array();
     for (let index = 0; index < 5; index++) {
@@ -544,7 +474,6 @@ function calculaBolasEscogidas() {
         }
         bolasElegidas.push(coloresBolas_array[colorAlearotio]);
     }
-    // bolasElegidas = ["rgb(0,0,255)", "rgb(255,0,0)", "rgb(138, 43, 226)", "rgb(255,165,0)", "rgb(127, 255, 212)"];
 }
 
 

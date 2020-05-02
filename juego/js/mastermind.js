@@ -387,22 +387,61 @@ $("#test").click(function() {
     let aciertosColoresYPosicionFila = 0;
     let aciertosTotal = 0;
     let bolas_index = new Array();
+    let indefOfs = [
+        [],
+        [],
+        [],
+        [],
+        []
+    ];
 
     if (filera == 9 && ganar == false && play == false) {
         play = true;
         perder();
-    } else if (ganar == true && play == false) {
-        play = true;
-        guanyar();
     } else {
-        console.log("=====COMRPOBAR COLORES=====");
+        console.log("=====COMPROBAR COLORES=====");
 
         for (let index = 0; index < filas[filera].length; index++) {
+            //let indexof = bolasElegidas.indexOf(filas[filera][index].color);
+            // console.log("=====INIT GET INDEX OF====");
+
+            // let indexof = bolasElegidas.indexOf(filas[filera][index].color);
+            // console.log("INDEX OF Primer : " + indexof);
+
+            // if (indefOfs.indexOf(indexof) !== -1) {
+            //     indexofTest = bolasElegidas.indexOf(filas[filera][index].color, indexof + 1);
+
+            //     // indefOfs[indexof] = -1;
+            //     indexof = indexofTest;
+            //     console.log("INDEX OF REPETIDO -> Nuevo : " + indexof);
+
+            // }
+
+            // indefOfs.push(indexof);
+            // console.log("====indefOfs====");
+            // console.log(indefOfs);
+
+
+
             let indexof = bolasElegidas.indexOf(filas[filera][index].color);
+
+            /*if (indefOfs.indexOf(indexof) !== -1) {
+                indexofTest = bolasElegidas.indexOf(filas[filera][index].color, indexof + 1);
+
+                indefOfs[indexof] = -1;
+                indexof = indexofTest;
+                console.log("INDEX OF REPETIDO -> Nuevo : " + indexof);
+            }
+
+            indefOfs.push(indexof);
+            console.log("====indefOfs====");
+            console.log(indefOfs);
+            console.log("=====END GET INDEX OF====");*/
+
             console.log("INIT BOLA ITEM");
 
 
-            bolasElegidas.filter(function(bola, index) {
+            /*bolasElegidas.filter(function(bola, index) {
                 let bola_index = bola.indexOf(filas[filera][index].color);
                 if (bola_index !== -1) {
                     console.log("index");
@@ -413,35 +452,40 @@ $("#test").click(function() {
 
             });
             console.log(bolas_index);
-            console.log("FIN BOLA ITEM");
+            console.log("FIN BOLA ITEM");*/
 
 
             if (indexof >= 0 && indexof == index) {
-                console.log("color y posicion : " + index);
+                console.log("color y posicion -> index: " + index + " | INDEX OF: " + indexof);
                 aciertosColoresYPosicionFila++;
             } else if (indexof >= 0) {
-                console.log("SOLO color" + index);
+                console.log("SOLO color -> index: " + index + " | INDEX OF: " + indexof);
                 aciertosColoresFila++;
 
             } else {
-                console.log("nada");
+                console.log("NADA -> index: " + index + " | INDEX OF: " + indexof);
+
 
             }
         }
         console.log("aciertosColoresFila " + aciertosColoresFila);
         console.log("aciertosColoresYPosicionFila " + aciertosColoresYPosicionFila);
         aciertosTotal = aciertosColoresFila + aciertosColoresYPosicionFila
+
+        if (aciertosColoresYPosicionFila == 5) {
+            ganar = true;
+        }
         for (let index = 0; index < aciertosTotal; index++) {
-            console.log("idenx: " + index);
+            // console.log("idenx: " + index);
             let ciruloSelecionado = null;
             if (aciertosColoresYPosicionFila > 0) {
-                console.log("DENTRO aciertosColoresYPosicionFila");
+                // console.log("DENTRO aciertosColoresYPosicionFila");
 
                 filas2[filera][index].color = "rgb(0,0,0)";
                 ciruloSelecionado = filas2[filera][index];
                 aciertosColoresYPosicionFila--;
             } else if (aciertosColoresFila > 0) {
-                console.log("DENTRO aciertosColoresFila");
+                // console.log("DENTRO aciertosColoresFila");
 
                 filas2[filera][index].color = "rgb(255,255,255)";
                 ciruloSelecionado = filas2[filera][index];
@@ -449,6 +493,12 @@ $("#test").click(function() {
             }
             dibujarCircle(ciruloSelecionado);
         }
+
+        if (ganar == true) {
+            play = true;
+            guanyar();
+        }
+
         posicionSelecionada = undefined;
 
     }
@@ -490,10 +540,16 @@ function perder() {
 }
 
 function calculaBolasEscogidas() {
-    for (let index = 0; index < 5; index++) {
+    /*for (let index = 0; index < 5; index++) {
         let colorAlearotio = calcularNumeroAletorio(coloresBolas_array.length - 1, 0);
+
+        while (bolasElegidas.indexOf(coloresBolas_array[colorAlearotio]) !== -1) {
+            colorAlearotio = calcularNumeroAletorio(coloresBolas_array.length - 1, 0);
+        }
         bolasElegidas.push(coloresBolas_array[colorAlearotio]);
-    }
+    }*/
+    bolasElegidas = ["rgb(0,0,255)", "rgb(255,0,0)", "rgb(138, 43, 226)", "rgb(255,165,0)", "rgb(127, 255, 212)"];
+    console.log("bolasElegidas");
     console.log(bolasElegidas);
 }
 

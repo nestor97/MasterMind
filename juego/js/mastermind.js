@@ -175,9 +175,11 @@ function guardaCirculosAciertos(x,y, n, i){
 function dibujarCircles(circles){
     circles.forEach(circle => {
         ctx.beginPath();
-        ctx.arc(circle.x, circle.y, circle.radius, 0, 2 * Math.PI, false);
+        ctx.arc(circle.x, circle.y, circle.radius, 0 * Math.PI, 2 * Math.PI);
+        //ctx.arc(circle.x, circle.y, circle.radius, 0, 2 * Math.PI, false);
         ctx.fillStyle = circle.color;
         ctx.fill();
+        
       });    
 }
 
@@ -264,14 +266,15 @@ function init(){
 
  /*** Se calcula posicion de los circulos y se hace click */
  function isIntersect(point, circle) {
+     
     return Math.sqrt((point.x-circle.x) ** 2 + (point.y - circle.y) ** 2) < circle.radius;
   }
 
 
 canvas.addEventListener('click', (e) => {
     const pos = {
-      x: e.clientX-canvas.offsetLeft,
-      y: e.clientY-canvas.offsetTop
+      x: e.clientX-canvas.offsetLeft-5,
+      y: e.clientY-canvas.offsetTop-5
     };
 
     console.log("posicion----> x:"+pos.x+ ' y: '+pos.y);
@@ -281,7 +284,7 @@ canvas.addEventListener('click', (e) => {
         filas[i].forEach(circle => {
             if (isIntersect(pos, circle)) {
                 
-              alert('click on circle: ' + 'x: '+circle.x+' y: '+circle.y+' color:'+circle.color+' radius:'+circle.radius+' id:'+circle.id+' fila:'+i );
+              alert('click on circle: ' + 'x: '+circle.x+' y: '+circle.y+' color:'+circle.color+' radius:'+circle.radius+' ratonx'+pos.x+' ratony'+pos.y+' fila:'+i );
              // dibujaCirculo(circle);
             }
             //console.log(isIntersect(pos, circle));

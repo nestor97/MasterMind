@@ -358,57 +358,44 @@ $("#test").click(function() {
         perder();
     } else {
         console.log("=====COMPROBAR COLORES=====");
+        let aciertos = compararResultados();
 
-        for (let index = 0; index < filas[filera].length; index++) {
+        aciertosColoresYPosicionFila = aciertos[0];
+        aciertosColoresFila = aciertos[1];
 
+        aciertosTotal = aciertosColoresFila + aciertosColoresYPosicionFila
 
-            if (!compararResultados()) {
-                console.log("DENTRO IF compararResultados");
-
-            }
-
-            //         let indexof = bolasElegidas.indexOf(filas[filera][index].color);
-
-            //         if (indexof >= 0 && indexof == index) {
-            //             console.log("color y posicion -> index: " + index + " | INDEX OF: " + indexof);
-            //             aciertosColoresYPosicionFila++;
-            //         } else if (indexof >= 0) {
-            //             console.log("SOLO color -> index: " + index + " | INDEX OF: " + indexof);
-            //             aciertosColoresFila++;
-            //         } else {
-            //             console.log("NADA -> index: " + index + " | INDEX OF: " + indexof);
-            //         }
-            //     }
-            //     console.log("aciertosColoresFila " + aciertosColoresFila);
-            //     console.log("aciertosColoresYPosicionFila " + aciertosColoresYPosicionFila);
-
-            //     aciertosTotal = aciertosColoresFila + aciertosColoresYPosicionFila
-
-            //     if (aciertosColoresYPosicionFila == 5) {
-            //         ganar = true;
-            //     }
-            //     for (let index = 0; index < aciertosTotal; index++) {
-            //         let ciruloSelecionado = null;
-            //         if (aciertosColoresYPosicionFila > 0) {
-            //             filas2[filera][index].color = "rgb(0,0,0)";
-            //             ciruloSelecionado = filas2[filera][index];
-            //             aciertosColoresYPosicionFila--;
-
-            //         } else if (aciertosColoresFila > 0) {
-            //             filas2[filera][index].color = "rgb(255,255,255)";
-            //             ciruloSelecionado = filas2[filera][index];
-            //             aciertosColoresFila--;
-            //         }
-            //         dibujarCircle(ciruloSelecionado);
-            //     }
-
-            //     if (ganar == true) {
-            //         play = true;
-            //         guanyar();
-            //     }
-
-            //     posicionSelecionada = undefined;
+        if (aciertosColoresYPosicionFila == 5) {
+            ganar = true;
         }
+
+        for (let index = 0; index < aciertosTotal; index++) {
+            let ciruloSelecionado = null;
+            if (aciertosColoresYPosicionFila > 0) {
+                filas2[filera][index].color = "rgb(0,0,0)";
+                ciruloSelecionado = filas2[filera][index];
+                aciertosColoresYPosicionFila--;
+
+            } else if (aciertosColoresFila > 0) {
+                filas2[filera][index].color = "rgb(255,255,255)";
+                ciruloSelecionado = filas2[filera][index];
+                aciertosColoresFila--;
+            }
+            dibujarCircle(ciruloSelecionado);
+        }
+
+
+        console.log("aciertosColoresFila");
+        console.log(aciertosColoresFila);
+        console.log("aciertosColoresYPosicionFila");
+        console.log(aciertosColoresYPosicionFila);
+
+        if (ganar == true) {
+            play = true;
+            guanyar();
+        }
+
+        posicionSelecionada = undefined;
     }
     console.log("Fila " + filera);
 
@@ -472,7 +459,7 @@ function perder() {
 
 // Funcion para Calcular el Resultado de las bolas a adivinar
 function calculaBolasEscogidas() {
-    /*bolasElegidas = new Array();
+    bolasElegidas = new Array();
     for (let index = 0; index < 5; index++) {
         let colorAlearotio = calcularNumeroAletorio(coloresBolas_array.length - 1, 0);
 
@@ -480,8 +467,8 @@ function calculaBolasEscogidas() {
             colorAlearotio = calcularNumeroAletorio(coloresBolas_array.length - 1, 0);
         }
         bolasElegidas.push(coloresBolas_array[colorAlearotio]);
-    }*/
-    bolasElegidas = ["rgb(0,0,255)", "rgb(255,0,0)", "rgb(138, 43, 226)", "rgb(255,165,0)", "rgb(127, 255, 212)"]
+    }
+    // bolasElegidas = ["rgb(0,0,255)", "rgb(255,0,0)", "rgb(138, 43, 226)", "rgb(255,165,0)", "rgb(127, 255, 212)"]
 
 }
 
@@ -491,48 +478,37 @@ function calcularNumeroAletorio(max, min) {
     return Math.floor((Math.random() * max) + min);
 }
 
+// Funcion que compara el araary de bolasElegidas con el de la selección del usuario para 
+// saber cuantos aciertos de color y posición y solo de color hay en la fila
 function compararResultados() {
 
-    var numSame = 0;
-    var numMisplaced = 0;
-    var indexesToIgnoreA1 = [];
-    var indexesToIgnoreA2 = [];
+    var aciertosColoresYPosicionFila = 0;
+    var aciertosColoresFila = 0;
+    var indexesToIgnoreColPos = [];
+    var indexesToIgnoreCol = [];
     let i = 0;
     let j = 0;
 
     for (i = 0; i < bolasElegidas.length; i++) {
         if (bolasElegidas[i] === filas[filera][i].color) {
-            numSame++;
-            indexesToIgnoreA1.push(i);
+            aciertosColoresYPosicionFila++;
+            indexesToIgnoreColPos.push(i);
         }
     }
 
     for (i = 0; i < bolasElegidas.length; i++) {
         for (j = 0; j < filas[filera].length; j++) {
-            if (indexesToIgnoreA1.indexOf(i) === -1 && indexesToIgnoreA2.indexOf(j) === -1) {
+            if (indexesToIgnoreColPos.indexOf(i) === -1 && indexesToIgnoreCol.indexOf(j) === -1) {
                 if (bolasElegidas[i] === filas[filera][j].color) {
-                    console.log("DENTRO 2 for 2 if");
-                    numMisplaced++;
-                    indexesToIgnoreA1.push(i);
-                    indexesToIgnoreA2.push(j);
+                    aciertosColoresFila++;
+                    indexesToIgnoreColPos.push(i);
+                    indexesToIgnoreCol.push(j);
 
                 }
             }
         }
     }
-    console.log("indexesToIgnoreA1");
-    console.log(indexesToIgnoreA1);
-    console.log("indexesToIgnoreA2");
-    console.log(indexesToIgnoreA2);
 
-    if (numSame === bolasElegidas.length) {
-        console.log("last if numSame");
-        console.log(numSame);
-        return false;
-    } else {
-        console.log("last ELSE numSame");
-        console.log(numSame);
-        console.log(numMisplaced);
-        return [numSame, numMisplaced];
-    }
+    return [aciertosColoresYPosicionFila, aciertosColoresFila];
+
 }

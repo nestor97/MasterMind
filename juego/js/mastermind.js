@@ -409,6 +409,7 @@ $("#newparty").click(function() {
         audio.pause();
         audio.currentTime = 0;
     }
+    filera=0;
     init(false);
 
 });

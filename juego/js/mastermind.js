@@ -17,6 +17,7 @@ var m;
 let posicionSelecionada;
 let posicionSelecionadaIndex;
 var bolasElegidas = new Array(); // bolas aleatorias para ganar
+var audio;
 
 crearArrayVacio();
 
@@ -412,6 +413,8 @@ $("#newparty").click(function() {
     limpiarCanvas();
     crearArrayVacio();
     init(false);
+    audio.pause();
+    audio.currentTime = 0;
 
 });
 // Boton de "Esborra", borra todos los cambios manteniendo las mismas bolas a adivinar
@@ -419,7 +422,6 @@ $("#eraser").click(function() {
     limpiarCanvas();
     crearArrayVacio();
     init(true);
-
 });
 
 // Funcion para limpiar el canvas
@@ -437,12 +439,9 @@ function guanyar() {
         ctx.fillStyle = 'rgba(255,255,255, .4)';
         ctx.fillRect(0, 150, 350, 306);
         ctx.drawImage(img, 55, 200, 240, 160);
-
-
-
     }
 
-    var audio = new Audio('../juego/audio/fanfarrias.mp3');
+    audio = new Audio('../juego/audio/fanfarrias.mp3');
     audio.play();
 
 }
@@ -458,7 +457,7 @@ function perder() {
         ctx.drawImage(img, 55, 200, 240, 160);
     }
 
-    var audio = new Audio('../juego/audio/funebre.mp3');
+    audio = new Audio('../juego/audio/funebre.mp3');
     audio.play();
 
 }
